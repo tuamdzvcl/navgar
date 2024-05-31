@@ -38,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
                 if(id == menuBottom[1]) {
                     setFragment(new fragment_item2());
                 }
+                if(id == menuBottom[2]) {
+                    setFragment(new Fragment_item3());
+                }
                 return false;
             }
         });

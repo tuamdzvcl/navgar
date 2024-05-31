@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/item1"
-        android:title="Trang chủ" />
+    <item
+        android:id="@+id/item1"
+        android:title="Nhập Hàng" />
 
-    <item android:id="@+id/item2"
-        android:title="AA" />
+    <item
+        android:id="@+id/item2"
+        android:title="Trang Chủ" />
 
-    <item android:id="@+id/item3"
-        android:title="Trang chủ 3" />
+    <item
+        android:id="@+id/item3"
+        android:title="Cài Đặt" />
 </menu>
