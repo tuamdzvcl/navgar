@@ -3,13 +3,17 @@
 
     <item
         android:id="@+id/item1"
-        android:title="Nhập Hàng" />
+        android:title="Nhập Hàng"
+        android:icon="@drawable/goods"
+        />
 
     <item
         android:id="@+id/item2"
-        android:title="Trang Chủ" />
+        android:title="Trang Chủ"
+        android:icon="@drawable/home"/>
 
     <item
         android:id="@+id/item3"
-        android:title="Cài Đặt" />
+        android:title="Cài Đặt"
+        android:icon="@drawable/settings"/>
 </menu>

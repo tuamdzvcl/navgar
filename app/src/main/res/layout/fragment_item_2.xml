@@ -16,21 +16,25 @@
             android:layout_marginTop="20dp"
             android:background="#03ACF8"
             android:gravity="center"
-            android:text="TextView"
+            android:text="Tạp Hóa Tuấn Anh"
             android:textColor="#32E91E"
-            android:textSize="30dp" />
+            android:textSize="30dp"
+            android:layout_margin="2dp"
+            />
 
         <ListView
             android:id="@+id/lv"
             android:layout_width="match_parent"
             android:layout_height="343dp"
-            android:background="#FF181919" />
+            android:background="#FF181919"
+            android:layout_margin="2dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_margin="2dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -63,7 +67,7 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/textView4g"
+                            android:id="@+id/txttong"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_weight="2"
@@ -72,6 +76,7 @@
                             android:textColor="#ffff"
                             android:textSize="30dp"
                             android:textStyle="bold"
+                            android:gravity="center"
                             />
                     </LinearLayout>
                 </LinearLayout>
@@ -83,7 +88,7 @@
                     android:weightSum="3">
 
                     <TextView
-                        android:id="@+id/textView5g"
+                        android:id="@+id/txthuydon"
                         android:layout_width="328dp"
                         android:layout_height="79dp"
                         android:layout_weight="1.5"
@@ -95,14 +100,16 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/textView6g"
+                        android:id="@+id/txtthanhtoan"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1.5"
-                        android:onClick="pay_btn"
+                        android:onClick="thanhtoan_btn"
                         android:text="THANH TOAN"
                         android:textSize="30dp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:drawableRight="@drawable/icon"
+                        />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

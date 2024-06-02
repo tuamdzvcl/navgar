@@ -57,23 +57,18 @@ public class AdapterSanPham extends BaseAdapter {
         {
             viewHoler =(ViewHoler) convertView.getTag();
         }
-        SanPham sp = sanPhamArrayList.get(position);
-        viewHoler.tvtensp.setText("Tên SP: " + sp.getTenSp());
-        viewHoler.tvsl.setText("Số Lượng: " + sp.getSoLuong());
-        viewHoler.tvgia.setText("Giá SP: " + sp.getGiaSP());
+            SanPham sp = sanPhamArrayList.get(position);
+            viewHoler.tvtensp.setText("Tên SP: " + sp.getTenSp());
+            viewHoler.tvsl.setText("Số Lượng: " + sp.getSoLuong());
+            viewHoler.tvgia.setText("Giá SP: " + sp.getGiaSP());
 
-        if(sp.getHinh()==1)
-        {
-            viewHoler.ivhinh.setImageResource(R.drawable.bun);
-        }
-        else if (sp.getHinh()==2)
-        {
-            viewHoler.ivhinh.setImageResource(R.drawable.bia);
-        }
-        else
-        {
-            viewHoler.ivhinh.setImageResource(R.drawable.coca);
-        }
+            if (sp.getHinh() == 1) {
+                viewHoler.ivhinh.setImageResource(R.drawable.bun);
+            } else if (sp.getHinh() == 2) {
+                viewHoler.ivhinh.setImageResource(R.drawable.bia);
+            } else {
+                viewHoler.ivhinh.setImageResource(R.drawable.coca);
+            }
         return convertView;
     }
     class ViewHoler {

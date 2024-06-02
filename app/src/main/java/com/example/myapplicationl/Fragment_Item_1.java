@@ -34,6 +34,7 @@ public class Fragment_Item_1 extends Fragment {
 
     private  DataBaseManager baseManager;
     private ArrayList<SanPham> sanPhamArrayList;
+    private AdapterSanPham adapter;
     private ListView lv;
     private List<SanPham> SPList;
     ArrayList<String> SP = new ArrayList<>();
@@ -47,6 +48,7 @@ public class Fragment_Item_1 extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        AdapterSanPham adapter = new AdapterSanPham(getContext(), sanPhamArrayList);
 
         txtttieude = viewItem1.findViewById(R.id.txttieude);
         edittensp = viewItem1.findViewById(R.id.edttensp);
@@ -67,7 +69,7 @@ public class Fragment_Item_1 extends Fragment {
                 editsl.setText(sp.getSoLuong());
                 editgia.setText(sp.getGiaSP());
                 edittensp.setText(sp.getTenSp());
-                editimg.setText(sp.getHinh()+" ") ;
+                editimg.setText(sp.getHinh() + "");
 
             }
         });
@@ -79,19 +81,104 @@ public class Fragment_Item_1 extends Fragment {
                 String Gia = editgia.getText().toString();
                 String hinh = editimg.getText().toString();
                 int hinh1 = Integer.parseInt(hinh);
-                SanPham sp = new SanPham(TenSP,Sl,Gia,hinh1);
-               baseManager.insert(sp);
-               loaddanhsach();
-               Toast.makeText(getContext(),"Thêm Thành Công ",Toast.LENGTH_SHORT).show();
+                if (CheckGiaTien.checkGiaTien(Gia) == false) {
+                    Toast.makeText(getContext(), "Sai định dạng tiền", Toast.LENGTH_SHORT).show();
+                    return;
+                    }
+                    SanPham sp = new SanPham(TenSP, Sl, Gia, hinh1);
+                    try {
+                        int check = baseManager.insert(sp);
+                        if (check > 0) {
+                            loaddanhsach();
+                            Toast.makeText(getContext(), "Thêm Thành Công ", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Thêm Không Thành Công ", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        txtttieude.setText("lỗi" + e);
+                    }
+
             }
         });
-    }
+        btndelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String TenSP = edittensp.getText().toString();
+                String Sl = editsl.getText().toString();
+                String Gia = editgia.getText().toString();
+                String hinh = editimg.getText().toString();
+                int hinh1 = Integer.parseInt(hinh);
+                SanPham sp = new SanPham(TenSP, Sl, Gia, hinh1);
+                boolean isExist = checkTenSPExist(TenSP);
+                if (!isExist) {
+                    Toast.makeText(getContext(), "Sửa không thành công,Tên sản phẩm không tồn tại", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Xóa thành công", Toast.LENGTH_SHORT).show();
+                    baseManager.delete(sp);
+                    loaddanhsach();
+                }
 
-    private void loaddanhsach() {
+            }
+            private boolean checkTenSPExist(String TenSP) {
+                ArrayList<SanPham> sanPhamList = baseManager.loadds();
+                for (SanPham sp : sanPhamList) {
+                    if (sp.getTenSp().equals(TenSP)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+        btnupdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String TenSP = edittensp.getText().toString();
+                String Sl = editsl.getText().toString();
+                String Gia = editgia.getText().toString();
+                String hinh = editimg.getText().toString();
+                int hinh1 = Integer.parseInt(hinh);
+                boolean isExist = checkTenSPExist(TenSP);
+                if (!isExist) {
+
+                    Toast.makeText(getContext(), "Sửa không thành công: Tên sản phẩm không tồn tại", Toast.LENGTH_SHORT).show();
+                } else {
+                    int Slcu = getSoLuongCu(TenSP);
+                    int SlMoi = Integer.parseInt(Sl) + Slcu;
+                    SanPham sp = new SanPham(TenSP, String.valueOf(SlMoi), Gia, hinh1);
+                    Toast.makeText(getContext(), "Sửa thành công", Toast.LENGTH_SHORT).show();
+                    baseManager.update(sp);
+                    loaddanhsach();
+                }
+            }
+            private boolean checkTenSPExist(String TenSP) {
+                ArrayList<SanPham> sanPhamList = baseManager.loadds();
+                for (SanPham sp : sanPhamList) {
+                    if (sp.getTenSp().equals(TenSP)) {
+                        return true; // Tên sản phẩm đã tồn tại trong cơ sở dữ liệu
+                    }
+                }
+                return false; // Tên sản phẩm không tồn tại trong cơ sở dữ liệu
+            }
+            private int getSoLuongCu(String TenSP) {
+                ArrayList<SanPham> sanPhamList = baseManager.loadds();
+                for (SanPham sp : sanPhamList) {
+                    if (sp.getTenSp().equals(TenSP)) {
+                        return Integer.parseInt(sp.getSoLuong()); // Trả về số lượng cũ
+                    }
+                }
+                return 0;
+            }
+
+        });
+
+    }
+    public void loaddanhsach() {
 
         sanPhamArrayList = baseManager.loadds();
-        AdapterSanPham adapter = new AdapterSanPham(getContext(),sanPhamArrayList);
+        adapter = new AdapterSanPham(getContext(),sanPhamArrayList);
         lv.setAdapter(adapter);
         }
 
+
 }
+

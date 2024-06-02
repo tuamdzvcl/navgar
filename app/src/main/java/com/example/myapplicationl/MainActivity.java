@@ -29,23 +29,18 @@ public class MainActivity extends AppCompatActivity {
         addControler();
 
     }
-
-
-
     private void addControler() {
         btndangnhap = findViewById(R.id.btndangnhap);
         txter = findViewById(R.id.txter);
         txtdangki = findViewById(R.id.txtdangki);
         edtmk = findViewById(R.id.edtmk);
         edttk = findViewById(R.id.edttk);
-
         btndangnhap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dangNhap(view);
             }
         });
-
         txtdangki.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
     public void dangNhap(View view) {
         String edittk = edttk.getText().toString();
         String editmk = edtmk.getText().toString();
@@ -62,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Không được để trống", Toast.LENGTH_SHORT).show();
             return;
         }
-
         try {
             db = SQLiteDatabase.openOrCreateDatabase("data/data/com.example.myapplicationl/QuanLyTaiKhoan", null);
             String query = "SELECT * FROM tblQLTK WHERE uesr = ? AND pass = ?";
@@ -76,25 +69,21 @@ public class MainActivity extends AppCompatActivity {
                 txter.setText("Tài khoản hoặc mật khẩu không đúng");
                 clear();
             }
-
             cursor.close();
             db.close();
         } catch (SQLException ex) {
             txter.setText("Lỗi: " + ex.getMessage());
         }
     }
-
     private void clear() {
         edttk.setText("");
         edtmk.setText("");
     }
-
     public void dangKi(View view) {
         Dialog dialog = new Dialog(this);
         dialog.setTitle("Đăng kí");
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dangki);
-
         EditText edtDangkiTk = dialog.findViewById(R.id.edtDangkiTk);
         EditText edtDangkiMk = dialog.findViewById(R.id.edtDangkiMk);
         Button btnDangkiSubmit = dialog.findViewById(R.id.btnquen);
@@ -107,29 +96,23 @@ public class MainActivity extends AppCompatActivity {
                 dialog.cancel();
             }
         });
-
         btnDangkiSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String username = edtDangkiTk.getText().toString().trim();
                 String password = edtDangkiMk.getText().toString().trim();
                 String email = editemali.getText().toString().trim();
-
                 if (username.isEmpty() || password.isEmpty() ||email.isEmpty()) {
                     Toast.makeText(MainActivity.this, "Vui lòng không để trống!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 if(CheckMail.checkMail(email) == false){
                     Toast.makeText(MainActivity.this, "email sai dinh dang", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-
                 try {
                     db = SQLiteDatabase.openOrCreateDatabase("data/data/com.example.myapplicationl/QuanLyTaiKhoan", null);
                     db.execSQL("CREATE TABLE IF NOT EXISTS tblQLTK (uesr TEXT PRIMARY KEY, pass TEXT,email text)");
-
                     Cursor cursor = db.rawQuery("SELECT * FROM tblQLTK WHERE uesr = ? OR email = ?", new String[]{username, email});
                     if (cursor.moveToFirst()) {
                         Toast.makeText(MainActivity.this, "Tên đăng nhập  hoặc email đã tồn tại!", Toast.LENGTH_SHORT).show();
@@ -137,12 +120,10 @@ public class MainActivity extends AppCompatActivity {
                         return;
                     }
                     cursor.close();
-
                     ContentValues values = new ContentValues();
                     values.put("uesr", username);
                     values.put("pass", password);
                     values.put("email", email);
-
                     long result = db.insert("tblQLTK", null, values);
                     if (result == -1) {
                         Toast.makeText(MainActivity.this, "Đăng kí thất bại, vui lòng thử lại!", Toast.LENGTH_SHORT).show();
