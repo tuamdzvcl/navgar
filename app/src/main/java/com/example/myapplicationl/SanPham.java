@@ -6,6 +6,9 @@ public class SanPham {
     private String giaSP;
     private int hinh;
 
+    public SanPham() {
+    }
+
     public SanPham(String tenSp, String soLuong, String giaSP, int hinh) {
         TenSp = tenSp;
         SoLuong = soLuong;

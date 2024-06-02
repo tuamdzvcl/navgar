@@ -1,5 +1,7 @@
 package com.example.myapplicationl;
 
+import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -7,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,15 +22,20 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Fragment_Item_1 extends Fragment {
     private View viewItem1;
 
     TextView txtttieude;
-    EditText edittensp, editsl, editgia;
+    EditText edittensp, editsl, editgia,editimg;
     Button btninsert, btnupdate, btndelete;
-    ListView lv;
-    SQLiteDatabase db;
+
+
+    private  DataBaseManager baseManager;
+    private ArrayList<SanPham> sanPhamArrayList;
+    private ListView lv;
+    private List<SanPham> SPList;
     ArrayList<String> SP = new ArrayList<>();
 
     @Nullable
@@ -48,68 +56,42 @@ public class Fragment_Item_1 extends Fragment {
         btnupdate = viewItem1.findViewById(R.id.btnUpdate);
         btndelete = viewItem1.findViewById(R.id.btndelete);
         lv = viewItem1.findViewById(R.id.lv);
-
+        editimg = viewItem1.findViewById(R.id.editimg);
+        baseManager = new DataBaseManager(getContext());
         loaddanhsach();
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                SanPham sp = sanPhamArrayList.get(position);
+                edittensp.setText(sp.getTenSp());
+                editsl.setText(sp.getSoLuong());
+                editgia.setText(sp.getGiaSP());
+                edittensp.setText(sp.getTenSp());
+                editimg.setText(sp.getHinh()+" ") ;
 
+            }
+        });
         btninsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String tensp = edittensp.getText().toString();
-                String soluong = editsl.getText().toString();
-                String gia = editgia.getText().toString();
-                String msg = "";
-
-                if (tensp.isEmpty() || soluong.isEmpty() || gia.isEmpty()) {
-                    msg = "Hãy nhập đầy đủ thông tin";
-                } else {
-                    try {
-                        db = SQLiteDatabase.openDatabase("/data/data/com.example.myapplicationl/QuanLyBanHang", null, SQLiteDatabase.CREATE_IF_NECESSARY);
-                        db.execSQL("INSERT INTO tblQLBH (tenSP, SoLuong, Gia) VALUES ('" + tensp + "', '" + soluong + "', '" + gia + "');");
-                        msg = "Thêm thành công: " + tensp + " - " + soluong + " - " + gia;
-                        clear();
-                        loaddanhsach();
-                    } catch (SQLException ex) {
-                        txtttieude.setText("Lỗi: " + ex.getMessage());
-                    } finally {
-                        if (db != null && db.isOpen()) {
-                            db.close();
-                        }
-                    }
-                }
-                Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+                String TenSP = edittensp.getText().toString();
+                String Sl = editsl.getText().toString();
+                String Gia = editgia.getText().toString();
+                String hinh = editimg.getText().toString();
+                int hinh1 = Integer.parseInt(hinh);
+                SanPham sp = new SanPham(TenSP,Sl,Gia,hinh1);
+               baseManager.insert(sp);
+               loaddanhsach();
+               Toast.makeText(getContext(),"Thêm Thành Công ",Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void loaddanhsach() {
-        SP.clear();
-        try {
-            db = SQLiteDatabase.openOrCreateDatabase("/data/data/com.example.myapplicationl/QuanLyBanHang", null);
-            db.execSQL("CREATE TABLE IF NOT EXISTS tblQLBH (tenSP TEXT PRIMARY KEY, SoLuong TEXT, Gia TEXT)");
-            Cursor c1 = db.rawQuery("SELECT * FROM tblQLBH", null);
-            if (c1.moveToFirst()) {
-                do {
-                    String tensp = c1.getString(0);
-                    String soluong = c1.getString(1);
-                    String gia = c1.getString(2);
-                    SP.add(tensp + " - " + soluong + " - " + gia);
-                } while (c1.moveToNext());
-            }
-            c1.close();
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, SP);
-            lv.setAdapter(adapter);
-        } catch (SQLException e) {
-            txtttieude.setText("Lỗi: " + e.getMessage());
-        } finally {
-            if (db != null && db.isOpen()) {
-                db.close();
-            }
-        }
-    }
 
-    private void clear() {
-        edittensp.setText("");
-        editsl.setText("");
-        editgia.setText("");
-    }
+        sanPhamArrayList = baseManager.loadds();
+        AdapterSanPham adapter = new AdapterSanPham(getContext(),sanPhamArrayList);
+        lv.setAdapter(adapter);
+        }
+
 }

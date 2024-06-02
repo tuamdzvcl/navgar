@@ -8,53 +8,76 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class AdapterSanPham extends BaseAdapter {
 
     private Context context;
-    private int layout ;
-    private List<SanPham> arraylist;
 
-    public AdapterSanPham(Context context, int layout, List<SanPham> arraylist) {
+    private ArrayList<SanPham> sanPhamArrayList;
+
+    public AdapterSanPham(Context context, ArrayList<SanPham> data) {
         this.context = context;
-        this.layout = layout;
-        this.arraylist = arraylist;
+        this.sanPhamArrayList =data;
+
     }
 
     @Override
     public int getCount() {
-        return arraylist.size();
+        return sanPhamArrayList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return arraylist.get(position);
+        return null;
     }
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return 0;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            convertView = inflater.inflate(layout, parent, false);
+        ViewHoler viewHoler;
+        if(convertView == null){
+
+            viewHoler = new ViewHoler();
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.sanpham,null);
+            viewHoler.ivhinh=convertView.findViewById(R.id.image4);
+            viewHoler.tvtensp=convertView.findViewById(R.id.TenSP);
+            viewHoler.tvsl=convertView.findViewById(R.id.soluong);
+            viewHoler.tvgia=convertView.findViewById(R.id.gia);
+            convertView.setTag(viewHoler);
+
+
+
+        }else
+        {
+            viewHoler =(ViewHoler) convertView.getTag();
         }
+        SanPham sp = sanPhamArrayList.get(position);
+        viewHoler.tvtensp.setText("Tên SP: " + sp.getTenSp());
+        viewHoler.tvsl.setText("Số Lượng: " + sp.getSoLuong());
+        viewHoler.tvgia.setText("Giá SP: " + sp.getGiaSP());
 
-        SanPham sanPham = arraylist.get(position);
-        TextView textView = convertView.findViewById(R.id.name);
-        TextView textView1 = convertView.findViewById(R.id.gia);
-        TextView textView2 = convertView.findViewById(R.id.soluong);
-        ImageView imageView = convertView.findViewById(R.id.image4);
-
-        textView.setText(sanPham.getTenSp());
-        textView1.setText(String.valueOf(sanPham.getGiaSP()));
-        textView2.setText(String.valueOf(sanPham.getSoLuong()));
-        imageView.setImageResource(sanPham.getHinh());
-
+        if(sp.getHinh()==1)
+        {
+            viewHoler.ivhinh.setImageResource(R.drawable.bun);
+        }
+        else if (sp.getHinh()==2)
+        {
+            viewHoler.ivhinh.setImageResource(R.drawable.bia);
+        }
+        else
+        {
+            viewHoler.ivhinh.setImageResource(R.drawable.coca);
+        }
         return convertView;
+    }
+    class ViewHoler {
+        public ImageView ivhinh;
+        public  TextView tvtensp,tvsl,tvgia;
     }
 }
